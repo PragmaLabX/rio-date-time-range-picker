@@ -9,7 +9,7 @@ interface RangeDayProps extends PickersDayProps<Dayjs> {
 }
 
 export function RangeDay(props: RangeDayProps) {
-  const { day, rangeStart, rangeEnd, previewEnd, ...other } = props;
+  const { day, rangeStart, rangeEnd, previewEnd, outsideCurrentMonth, ...other } = props;
 
   const effectiveEnd = rangeEnd ?? previewEnd;
   const isPreview = !rangeEnd && !!previewEnd;
@@ -27,9 +27,13 @@ export function RangeDay(props: RangeDayProps) {
   const isEdge = isStart || isEnd;
 
   return (
+    // outsideCurrentMonth days are disabled: clicking them would make DateCalendar
+    // silently switch its internal displayed month, desyncing it from our custom header
     <PickersDay
       {...other}
       day={day}
+      outsideCurrentMonth={outsideCurrentMonth}
+      disabled={outsideCurrentMonth}
       disableMargin
       sx={(theme) => ({
         ...((isInRange || isEdge) && {
