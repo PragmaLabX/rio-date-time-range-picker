@@ -9,7 +9,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import { DateTimeFields, defaultTime } from './DateTimeFields';
 import { PresetsSidebar } from './PresetsSidebar';
 import { rangeForPreset } from './presets';
-import { RangeCalendars } from './RangeCalendars';
+import { RangeCalendars, type CalendarSide } from './RangeCalendars';
 import type { PresetKey, TimeValue } from './types';
 
 const INITIAL_START = dayjs('2026-04-10');
@@ -33,6 +33,14 @@ export function DateRangePicker({ onApply, onCancel }: DateRangePickerProps) {
 
   const handleNavigate = (direction: 1 | -1) => {
     setAnchorMonth((prev) => prev.add(direction, 'month'));
+  };
+
+  const handleYearChange = (year: number, side: CalendarSide) => {
+    setAnchorMonth((prev) => {
+      if (side === 'left') return prev.year(year);
+      const yearOffset = prev.add(1, 'month').year() - prev.year();
+      return prev.year(year - yearOffset);
+    });
   };
 
   const handleSelectDay = (day: Dayjs) => {
@@ -99,6 +107,7 @@ export function DateRangePicker({ onApply, onCancel }: DateRangePickerProps) {
             rangeEnd={endDate}
             previewEnd={previewEnd}
             onNavigate={handleNavigate}
+            onYearChange={handleYearChange}
             onSelectDay={handleSelectDay}
             onHoverDay={setHoverDate}
           />
