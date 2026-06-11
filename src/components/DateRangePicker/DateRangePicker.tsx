@@ -16,17 +16,28 @@ const INITIAL_START = dayjs('2026-04-10');
 const INITIAL_END = dayjs('2026-05-15');
 
 export interface DateRangePickerProps {
+  initialStart?: Dayjs | null;
+  initialEnd?: Dayjs | null;
+  initialStartTime?: TimeValue;
+  initialEndTime?: TimeValue;
   onApply?: (range: { start: Dayjs | null; end: Dayjs | null; startTime: TimeValue; endTime: TimeValue }) => void;
   onCancel?: () => void;
 }
 
-export function DateRangePicker({ onApply, onCancel }: DateRangePickerProps) {
+export function DateRangePicker({
+  initialStart = INITIAL_START,
+  initialEnd = INITIAL_END,
+  initialStartTime,
+  initialEndTime,
+  onApply,
+  onCancel,
+}: DateRangePickerProps) {
   const [selectedPreset, setSelectedPreset] = useState<PresetKey>('custom');
-  const [startDate, setStartDate] = useState<Dayjs | null>(INITIAL_START);
-  const [endDate, setEndDate] = useState<Dayjs | null>(INITIAL_END);
-  const [startTime, setStartTime] = useState<TimeValue>(defaultTime());
-  const [endTime, setEndTime] = useState<TimeValue>(defaultTime());
-  const [anchorMonth, setAnchorMonth] = useState<Dayjs>(INITIAL_START.startOf('month'));
+  const [startDate, setStartDate] = useState<Dayjs | null>(initialStart);
+  const [endDate, setEndDate] = useState<Dayjs | null>(initialEnd);
+  const [startTime, setStartTime] = useState<TimeValue>(initialStartTime ?? defaultTime());
+  const [endTime, setEndTime] = useState<TimeValue>(initialEndTime ?? defaultTime());
+  const [anchorMonth, setAnchorMonth] = useState<Dayjs>((initialStart ?? dayjs()).startOf('month'));
   const [hoverDate, setHoverDate] = useState<Dayjs | null>(null);
 
   const rightMonth = useMemo(() => anchorMonth.add(1, 'month'), [anchorMonth]);
@@ -87,7 +98,7 @@ export function DateRangePicker({ onApply, onCancel }: DateRangePickerProps) {
   const previewEnd = !endDate ? hoverDate : null;
 
   return (
-    <Paper elevation={3} sx={{ p: 3, maxWidth: 980, borderRadius: 2 }}>
+    <Paper elevation={3} sx={{ p: 3, width: 'fit-content', borderRadius: 2 }}>
       <Typography variant="h5" color="primary.light" fontWeight={400} gutterBottom>
         Select Date Range
       </Typography>

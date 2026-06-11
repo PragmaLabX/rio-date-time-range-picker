@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { DateRangePicker } from './components/DateRangePicker/DateRangePicker';
+import { DateRangeInput } from './components/DateRangePicker/DateRangeInput';
 
 function App() {
   return (
@@ -13,10 +13,7 @@ function App() {
         p: 4,
       }}
     >
-      <DateRangePicker
-        onApply={(range) => console.log('Apply', range)}
-        onCancel={() => console.log('Cancel')}
-      />
+      <DateRangeInput />
     </Box>
   );
 }
